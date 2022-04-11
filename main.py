@@ -150,13 +150,17 @@ def register():
         cursor.close()
         conn.close()
 
+
 #needed, doesn't work yet
-@app.route('/login/<string:email>', methods=['GET'])
-def login(email):
+@app.route('/login', methods=['GET'])
+def login():
+    email = request.args.get('email')
+    password = request.args.get('password')
+    print(email, password)
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id, fullname FROM accounts WHERE email =%s", email)
+        cursor.execute("SELECT id, fullname FROM account WHERE email='"+email+"' AND password='"+password+"'")
         Row = cursor.fetchone()
         respone = jsonify(Row)
         respone.status_code = 200
@@ -166,6 +170,24 @@ def login(email):
     finally:
         cursor.close()
         conn.close()
+
+
+# #needed, doesn't work yet
+# @app.route('/login/<email>', methods=['GET'])
+# def login(email):
+#     try:
+#         conn = mysql.connect()
+#         cursor = conn.cursor(pymysql.cursors.DictCursor)
+#         cursor.execute("SELECT id, fullname FROM account WHERE email =%s", email)
+#         Row = cursor.fetchone()
+#         respone = jsonify(Row)
+#         respone.status_code = 200
+#         return respone
+#     except Exception as e:
+#         print(e)
+#     finally:
+#         cursor.close()
+#         conn.close()
 
 
 if __name__ == "__main__":
