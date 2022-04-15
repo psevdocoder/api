@@ -160,7 +160,8 @@ def login():
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id, fullname, login, password FROM account WHERE login='"+login+"'")
+        # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
+        cursor.execute("SELECT id, fullname, login, password FROM account WHERE login='" + login + "'")
         Row = cursor.fetchone()
         respone = jsonify(Row)
         respone.status_code = 200
@@ -171,15 +172,18 @@ def login():
         cursor.close()
         conn.close()
 
+
 #needed, doesn't work yet
-@app.route('/login', methods=['GET'])
-def login():
-    login = request.args.get('login')
+@app.route('/password', methods=['GET'])
+def password():
+    password = request.args.get('password')
+    # password = request.args.get('password')
     # print(login, password)
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id, fullname, login, password FROM account WHERE fullname='"+login+"'")
+        # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
+        cursor.execute("SELECT id, fullname, login, password FROM account WHERE password='" + password + "'")
         Row = cursor.fetchone()
         respone = jsonify(Row)
         respone.status_code = 200
@@ -189,6 +193,52 @@ def login():
     finally:
         cursor.close()
         conn.close()
+
+
+#needed, doesn't work yet
+@app.route('/id', methods=['GET'])
+def id():
+    id = request.args.get('id')
+    # password = request.args.get('password')
+    # print(login, password)
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
+        cursor.execute("SELECT id, fullname, login, password FROM account WHERE id='" + id + "'")
+        Row = cursor.fetchone()
+        respone = jsonify(Row)
+        respone.status_code = 200
+        return respone
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+#needed, doesn't work yet
+@app.route('/fullname', methods=['GET'])
+def fullname():
+    fullname = request.args.get('fullname')
+    # password = request.args.get('password')
+    # print(login, password)
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
+        cursor.execute("SELECT id, fullname, login, password FROM account WHERE fullname='" + fullname + "'")
+        Row = cursor.fetchone()
+        respone = jsonify(Row)
+        respone.status_code = 200
+        return respone
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
 # #needed, doesn't work yet
 # @app.route('/login/<email>', methods=['GET'])
 # def login(email):
@@ -205,28 +255,6 @@ def login():
 #     finally:
 #         cursor.close()
 #         conn.close()
-
-
-
-@app.route('/command/<>', methods=['GET'])
-def login():
-    login = request.args.get('login')
-    password = request.args.get('password')
-    # print(login, password)
-    try:
-        conn = mysql.connect()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
-        Row = cursor.fetchone()
-        respone = jsonify(Row)
-        respone.status_code = 200
-        return respone
-    except Exception as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
-
 
 
 if __name__ == "__main__":
