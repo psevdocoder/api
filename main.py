@@ -1,8 +1,19 @@
+import datetime
+
+
+from threading import Thread
+import time
+
+
 import pymysql
+import schedule
+
 from app import app
 from config import mysql
-from flask import jsonify
+from flask import jsonify, Flask
 from flask import flash, request
+from flask_apscheduler import APScheduler, scheduler
+
 
 #test
 @app.route('/create', methods=['POST'])
@@ -135,13 +146,18 @@ def register():
         if _fullname and _login and _password and request.method == 'POST':
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
-            bindData = (_fullname, _login, _password)
-            cursor.execute(sqlQuery, bindData)
-            conn.commit()
-            respone = jsonify('Employee added successfully!')
-            respone.status_code = 200
-            return respone
+
+            cursor.execute("SELECT login FROM account WHERE login =%s", _login)
+            empRow = cursor.fetchone()
+            print(empRow)
+
+            # sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
+            # bindData = (_fullname, _login, _password)
+            # cursor.execute(sqlQuery, bindData)
+            # conn.commit()
+            # respone = jsonify('Employee added successfully!')
+            # respone.status_code = 200
+            # return respone
         else:
             return showMessage()
     except Exception as e:
@@ -151,7 +167,25 @@ def register():
         conn.close()
 
 
-#needed, doesn't work yet
+@app.route('/command', methods=['GET'])
+def aye():
+    command = request.args.get('command')
+    # print(login, password)
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(command)
+        # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
+        respone = jsonify()
+        respone.status_code = 200
+        return respone
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
 @app.route('/login', methods=['GET'])
 def login():
     login = request.args.get('login')
@@ -173,11 +207,10 @@ def login():
         conn.close()
 
 
-#needed, doesn't work yet
+#Getter by password
 @app.route('/password', methods=['GET'])
 def password():
     password = request.args.get('password')
-    # password = request.args.get('password')
     # print(login, password)
     try:
         conn = mysql.connect()
@@ -195,7 +228,7 @@ def password():
         conn.close()
 
 
-#needed, doesn't work yet
+#Getter by id
 @app.route('/id', methods=['GET'])
 def id():
     id = request.args.get('id')
@@ -217,7 +250,7 @@ def id():
         conn.close()
 
 
-#needed, doesn't work yet
+#Getter by fullname
 @app.route('/fullname', methods=['GET'])
 def fullname():
     fullname = request.args.get('fullname')
@@ -239,23 +272,65 @@ def fullname():
         conn.close()
 
 
-# #needed, doesn't work yet
-# @app.route('/login/<email>', methods=['GET'])
-# def login(email):
-#     try:
-#         conn = mysql.connect()
-#         cursor = conn.cursor(pymysql.cursors.DictCursor)
-#         cursor.execute("SELECT id, fullname FROM account WHERE email =%s", email)
-#         Row = cursor.fetchone()
-#         respone = jsonify(Row)
-#         respone.status_code = 200
-#         return respone
-#     except Exception as e:
-#         print(e)
-#     finally:
-#         cursor.close()
-#         conn.close()
+@app.route('/newpoll', methods=['POST'])
+def newpoll():
+    try:
+        _json = request.json
+        _subject = _json['subject']
+        _time = _json['time'] #Время жизни
+
+        _timestamp = datetime.datetime.now() # Текущее время
+        _timetostop = _time + _timestamp #Время конца жизни строчки
+
+
+
+        if _subject and request.method == 'POST':
+            conn = mysql.connect()
+            cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+
+            sqlQuery = "INSERT INTO polls(subject, timetostop) VALUES(%s, %s)"
+            bindData = (_subject, _timetostop)
+            cursor.execute(sqlQuery, bindData)
+            conn.commit()
+
+            respone = jsonify('Poll added successfully!')
+            respone.status_code = 200
+            return respone
+        else:
+            return showMessage()
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+
+
+# #Фоновая задача для своевременного удаления неактуальных опросов
+# def check_time_to_die():
+#     with app.app_context():
+#         while True:
+#             conn = mysql.connect()
+#             cursor = conn.cursor(pymysql.cursors.DictCursor)
+#             cursor.execute("SELECT id, subject, timetodie FROM polls")
+#             empRow = cursor.fetchone()
+#             respone = jsonify(empRow)
+#             respone.status_code = 200
+#             print(empRow)
+#             time.sleep(5)
+#             # return respone
+#
+#
+# thread = Thread(target=check_time_to_die)
+# thread.start()
+
+
+
+
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
