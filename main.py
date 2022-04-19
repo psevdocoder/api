@@ -176,7 +176,7 @@ def aye():
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute(command)
         # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
-        respone = jsonify()
+        respone = jsonify("")
         respone.status_code = 200
         return respone
     except Exception as e:
