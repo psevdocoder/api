@@ -186,34 +186,34 @@ def command():
         conn.close()
 
 
-@app.route('/login', methods=['POST'])
-def login():
-    json = request.json
-    login = json['login']
-    password = json['password']
-
-    # print(login, password)
-    try:
-        conn = mysql.connect()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
-        # cursor.execute("SELECT id, fullname, login, password FROM account WHERE login='" + login + "'")
-        row = cursor.fetchone()
-        respone = jsonify(row)
-        respone.status_code = 200
-        return respone
-    except Exception as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
+# @app.route('/login', methods=['POST'])
+# def login():
+#     json = request.json
+#     login = json['login']
+#     password = json['password']
+#
+#     # print(login, password)
+#     try:
+#         conn = mysql.connect()
+#         cursor = conn.cursor(pymysql.cursors.DictCursor)
+#         cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
+#         # cursor.execute("SELECT id, fullname, login, password FROM account WHERE login='" + login + "'")
+#         row = cursor.fetchone()
+#         respone = jsonify(row)
+#         respone.status_code = 200
+#         return respone
+#     except Exception as e:
+#         print(e)
+#     finally:
+#         cursor.close()
+#         conn.close()
 
 
 
 
 
 #Getter by login
-@app.route('/getlogin', methods=['GET'])
+@app.route('/login', methods=['GET'])
 def password():
     login = request.args.get('login')
     # print(login, password)
@@ -234,7 +234,7 @@ def password():
 
 
 #Getter by password
-@app.route('/getpassword', methods=['GET'])
+@app.route('/password', methods=['GET'])
 def getpassword():
     password = request.args.get('password')
     # print(login, password)
@@ -255,7 +255,7 @@ def getpassword():
 
 
 #Getter by id
-@app.route('/getid', methods=['GET'])
+@app.route('/id', methods=['GET'])
 def id():
     id = request.args.get('id')
     # password = request.args.get('password')
@@ -277,7 +277,7 @@ def id():
 
 
 #Getter by fullname
-@app.route('/getfullname', methods=['GET'])
+@app.route('/fullname', methods=['GET'])
 def fullname():
     fullname = request.args.get('fullname')
     # password = request.args.get('password')
