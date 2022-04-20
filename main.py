@@ -1,5 +1,5 @@
 import datetime
-
+import json
 
 from threading import Thread
 import time
@@ -135,7 +135,7 @@ def showMessage(error=None):
     respone.status_code = 404
     return respone
 
-#needed
+
 @app.route('/register', methods=['POST'])
 def register():
     try:
@@ -146,18 +146,24 @@ def register():
         if _fullname and _login and _password and request.method == 'POST':
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-
-            cursor.execute("SELECT login FROM account WHERE login =%s", _login)
-            empRow = cursor.fetchone()
-            print(empRow)
-
-            # sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
-            # bindData = (_fullname, _login, _password)
-            # cursor.execute(sqlQuery, bindData)
-            # conn.commit()
-            # respone = jsonify('Employee added successfully!')
-            # respone.status_code = 200
-            # return respone
+            #Начало проверки на существование логина
+            cursor.execute("SELECT login FROM account")
+            row = cursor.fetchall()
+            for lg in row:
+                #Если такой логин существует то идет ответ: There is already account with such login
+                if lg['login'] == _login:
+                    respone = jsonify("There is already account with such login")
+                    respone.status_code = 200
+                    return respone
+                #Иначе создается запись
+                else:
+                    sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
+                    bindData = (_fullname, _login, _password)
+                    cursor.execute(sqlQuery, bindData)
+                    conn.commit()
+                    respone = jsonify('Employee added successfully!')
+                    respone.status_code = 200
+                    return respone
         else:
             return showMessage()
     except Exception as e:
@@ -189,18 +195,20 @@ def command():
         conn.close()
 
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
-    login = request.args.get('login')
-    password = request.args.get('password')
+    json = request.json
+    login = json['login']
+    password = json['password']
+
     # print(login, password)
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
-        cursor.execute("SELECT id, fullname, login, password FROM account WHERE login='" + login + "'")
-        Row = cursor.fetchone()
-        respone = jsonify(Row)
+        cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
+        # cursor.execute("SELECT id, fullname, login, password FROM account WHERE login='" + login + "'")
+        row = cursor.fetchone()
+        respone = jsonify(row)
         respone.status_code = 200
         return respone
     except Exception as e:
@@ -222,7 +230,7 @@ def password():
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         # cursor.execute("SELECT id, fullname FROM account WHERE login='"+login+"' AND password='"+password+"'")
-        cursor.execute("SELECT id, fullname, login, password FROM account WHERE password='" + login + "'")
+        cursor.execute("SELECT id, fullname, login, password FROM account WHERE login='" + login + "'")
         Row = cursor.fetchone()
         respone = jsonify(Row)
         respone.status_code = 200
@@ -236,7 +244,7 @@ def password():
 
 #Getter by password
 @app.route('/getpassword', methods=['GET'])
-def password():
+def getpassword():
     password = request.args.get('password')
     # print(login, password)
     try:
