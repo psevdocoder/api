@@ -132,11 +132,11 @@ def showMessage(error=None):
 @app.route('/register', methods=['POST'])
 def register():
     try:
-        _json = request.json
-        _fullname = _json['fullname']
-        _login = _json['login']
-        _password = _json['password']
-        if _fullname and _login and _password and request.method == 'POST':
+        json = request.json
+        fullname = json['fullname']
+        login = json['login']
+        password = json['password']
+        if fullname and login and password and request.method == 'POST':
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             #Начало проверки на существование логина
@@ -144,19 +144,20 @@ def register():
             row = cursor.fetchall()
             for lg in row:
                 #Если такой логин существует то идет ответ: There is already account with such login
-                if lg['login'] == _login:
+                if lg['login'] == login:
                     respone = jsonify("There is already account with such login")
                     respone.status_code = 200
                     return respone
-                #Иначе создается запись
-                else:
-                    sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
-                    bindData = (_fullname, _login, _password)
-                    cursor.execute(sqlQuery, bindData)
-                    conn.commit()
-                    respone = jsonify('Employee added successfully!')
-                    respone.status_code = 200
-                    return respone
+
+
+            # Иначе создается запись
+            sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
+            bindData = (fullname, login, password)
+            cursor.execute(sqlQuery, bindData)
+            conn.commit()
+            respone = jsonify('Employee added successfully!')
+            respone.status_code = 200
+            return respone
         else:
             return showMessage()
     except Exception as e:
