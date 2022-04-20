@@ -3,10 +3,10 @@ FROM python:3.10
 # установка рабочей директории в контейнере
 WORKDIR /code
 # копирование файла зависимостей в рабочую директорию
-COPY requirements.txt .
+COPY / .
 # установка зависимостей
 RUN pip install -r requirements.txt
 # копирование содержимого локальной директории src в рабочую директорию
-COPY src/ .
+#COPY src/ .
 # команда, выполняемая при запуске контейнера
-CMD [ "uwsgi", "--ini", "app.ini"]
+CMD [ "uwsgi", "app.ini"]
