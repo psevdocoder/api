@@ -3,9 +3,8 @@ import pymysql
 
 from app import app
 from config import mysql
-from flask import jsonify, Flask
-from flask import flash, request
-from flask_apscheduler import APScheduler, scheduler
+from flask import jsonify
+from flask import request
 
 
 #test
