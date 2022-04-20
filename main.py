@@ -144,7 +144,7 @@ def register():
             for lg in row:
                 #Если такой логин существует то идет ответ: There is already account with such login
                 if lg['login'] == login:
-                    respone = jsonify("There is already account with such login")
+                    respone = jsonify("not_added")
                     respone.status_code = 200
                     return respone
 
@@ -154,7 +154,7 @@ def register():
             bindData = (fullname, login, password)
             cursor.execute(sqlQuery, bindData)
             conn.commit()
-            respone = jsonify('Employee added successfully!')
+            respone = jsonify('added')
             respone.status_code = 200
             return respone
         else:
@@ -170,7 +170,6 @@ def register():
 def command():
     _json = request.json
     _command = _json['command']
-    # print(login, password)
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
