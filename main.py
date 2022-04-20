@@ -144,7 +144,7 @@ def register():
             for lg in row:
                 #Если такой логин существует то идет ответ: There is already account with such login
                 if lg['login'] == login:
-                    respone = jsonify("not_added")
+                    respone = jsonify("already_have")
                     respone.status_code = 200
                     return respone
 
