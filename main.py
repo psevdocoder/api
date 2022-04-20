@@ -148,7 +148,6 @@ def register():
                     respone.status_code = 200
                     return respone
 
-
             # Иначе создается запись
             sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
             bindData = (fullname, login, password)
