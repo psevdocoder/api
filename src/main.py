@@ -1,12 +1,5 @@
 import datetime
-import json
-
-from threading import Thread
-import time
-
-
 import pymysql
-import schedule
 
 from app import app
 from config import mysql
