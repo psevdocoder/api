@@ -138,15 +138,15 @@ def register():
         if fullname and login and password and request.method == 'POST':
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            # #Начало проверки на существование логина
-            # cursor.execute("SELECT login FROM account")
-            # row = cursor.fetchall()
-            # for lg in row:
-            #     #Если такой логин существует то идет ответ: There is already account with such login
-            #     if lg['login'] == login:
-            #         respone = jsonify("already_have")
-            #         respone.status_code = 200
-            #         return respone
+            #Начало проверки на существование логина
+            cursor.execute("SELECT login FROM account")
+            row = cursor.fetchall()
+            for lg in row:
+                #Если такой логин существует то идет ответ: There is already account with such login
+                if lg['login'] == login:
+                    respone = jsonify("already_have")
+                    respone.status_code = 200
+                    return respone
 
             # Иначе создается запись
             sqlQuery = "INSERT INTO account(fullname, login, password) VALUES(%s, %s, %s)"
