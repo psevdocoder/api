@@ -7,9 +7,16 @@ from flask import request
 import pymysql
 
 
-
 imageblob = Blueprint('imageblob', __name__)
 
+
+
+
+def convertToBinaryData(filename):
+    # Convert digital data to binary format
+    with open(filename, 'rb') as file:
+        binaryData = file.read()
+    return binaryData
 
 @imageblob.route('/setimage', methods=['POST'])
 def insertBLOB():
@@ -24,13 +31,13 @@ def insertBLOB():
         cursor = connection.cursor()
         sql_q = "UPDATE account SET photo=%s WHERE login =%s"
 
-        # empPicture = convertToBinaryData(binphoto)
+        empPicture = convertToBinaryData(binphoto)
 
         # Convert data into tuple format
-        insert_blob_tuple = (binphoto, login)
+        insert_blob_tuple = (empPicture, login)
         result = cursor.execute(sql_q, insert_blob_tuple)
         connection.commit()
-        print("Image and file inserted successfully as a BLOB into python_employee table", result)
+        print("Image inserted successfully as a BLOB into", result)
 
     except mysql.connect.Error as error:
         print("Failed inserting BLOB data into MySQL table {}".format(error))
@@ -38,7 +45,7 @@ def insertBLOB():
     finally:
         cursor.close()
         connection.close()
-        print("MySQL connection is closed")
+        return("MySQL connection is closed")
 
 
 @imageblob.route('/getimage', methods=['GET'])
