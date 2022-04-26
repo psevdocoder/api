@@ -1,23 +1,9 @@
-import datetime
-import pymysql
-
-from accounts import accounts
-from polls import polls
-from imageblob import imageblob
-from example import example
+from src.accounts import accounts
+from src.polls import polls
+from src.imageblob import imageblob
+from src.example import example
 
 from app import app
-from config import mysql
-from flask import jsonify
-from flask import request
-
-
-
-
-
-
-
-
 
 # @app.route('/command', methods=['POST'])
 # def command():
