@@ -1,6 +1,9 @@
 import datetime
 import pymysql
 
+
+
+
 from app import app
 from config import mysql
 from flask import jsonify
@@ -235,7 +238,7 @@ def password():
 
 #Getter by password
 @app.route('/password', methods=['GET'])
-def getpassword():
+def password():
     password = request.args.get('password')
     # print(login, password)
     try:
@@ -296,6 +299,36 @@ def fullname():
     finally:
         cursor.close()
         conn.close()
+
+
+@app.route('/setimage', methods=['POST'])
+def insertBLOB():
+    json = request.json
+    login = json['login']
+    binphoto = json['binphoto']
+
+    print("Inserting BLOB into python_employee table")
+
+    try:
+        connection = mysql.connect()
+        cursor = connection.cursor()
+        sql_q = "UPDATE account SET photo=%s WHERE login =%s"
+
+        # empPicture = convertToBinaryData(binphoto)
+
+        # Convert data into tuple format
+        insert_blob_tuple = (binphoto, login)
+        result = cursor.execute(sql_q, insert_blob_tuple)
+        connection.commit()
+        print("Image and file inserted successfully as a BLOB into python_employee table", result)
+
+    except mysql.connect.Error as error:
+        print("Failed inserting BLOB data into MySQL table {}".format(error))
+
+    finally:
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
 
 
 @app.route('/newpoll', methods=['POST'])
