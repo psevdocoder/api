@@ -255,6 +255,7 @@ def password():
     finally:
         cursor.close()
         conn.close()
+        
 
 
 #Getter by id
