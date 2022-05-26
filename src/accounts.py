@@ -80,6 +80,24 @@ def login():
         conn.close()
 
 
+@accounts.route('/updatedata', methods=['POST'])
+def updatedata():
+    json = request.json
+    id = json['id']
+    npassword = json['npassword']
+    nlogin = json['nlogin']
+
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    sqlQuery = "UPDATE account SET password=%s, login=%s WHERE id=%s"
+    bindData = (npassword, nlogin, id)
+    cursor.execute(sqlQuery, bindData)
+    conn.commit()
+    respone = jsonify("changed")
+    respone.status_code = 200
+    return respone
+
+
 #Getter by password
 # @accounts.route('/password', methods=['GET'])
 # def password():
