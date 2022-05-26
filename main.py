@@ -2,6 +2,7 @@ from src.accounts import accounts
 from src.polls import polls
 from src.imageblob import imageblob
 from src.example import example
+from src.queue import queue
 
 from app import app
 
@@ -50,6 +51,7 @@ app.register_blueprint(accounts)
 app.register_blueprint(polls)
 app.register_blueprint(imageblob)
 app.register_blueprint(example)
+app.register_blueprint(queue)
 
 
 
