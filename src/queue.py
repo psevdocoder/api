@@ -30,6 +30,15 @@ def joinqueue():
         # print(table_count)
         # if table_count < 1:
 
+        cursor.execute("SELECT name FROM dima_table")
+        row = cursor.fetchall()
+        for lg in row:
+            if lg['login'] == fullname:
+                respone = jsonify("already_in_queuee")
+                respone.status_code = 200
+                return respone
+
+
         sqlquery = "INSERT INTO dima_table(name) VALUES (%s)"
         binddata = fullname
         cursor.execute(sqlquery, binddata)
