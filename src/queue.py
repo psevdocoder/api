@@ -52,7 +52,7 @@ def leavequeue():
         fullname = json['fullname']
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sqlquery = "DELETE FROM pr_queue WHERE name=%s"
+        sqlquery = "DELETE FROM dima_table WHERE name=%s"
         binddata = fullname
         cursor.execute(sqlquery, binddata)
         conn.commit()
