@@ -30,7 +30,7 @@ def joinqueue():
         # print(table_count)
         # if table_count < 1:
 
-        sqlquery = "INSERT INTO pr_queue(fullname) VALUES (%s)"
+        sqlquery = "INSERT INTO dima_table(name) VALUES (%s)"
         binddata = fullname
         cursor.execute(sqlquery, binddata)
         conn.commit()
@@ -52,7 +52,7 @@ def leavequeue():
         fullname = json['fullname']
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sqlquery = "DELETE FROM pr_queue WHERE fullname=%s"
+        sqlquery = "DELETE FROM pr_queue WHERE name=%s"
         binddata = fullname
         cursor.execute(sqlquery, binddata)
         conn.commit()
