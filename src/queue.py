@@ -50,7 +50,6 @@ def leavequeue():
     try:
         json = request.json
         fullname = json['fullname']
-
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         sqlquery = "DELETE FROM pr_queue WHERE fullname=%s"
