@@ -38,14 +38,14 @@ def joinqueue():
                 respone.status_code = 200
                 return respone
 
+            sqlquery = "INSERT INTO dima_table(name) VALUES (%s)"
+            binddata = fullname
+            cursor.execute(sqlquery, binddata)
+            conn.commit()
+            respone = jsonify("joinedqueue")
+            respone.status_code = 200
+            return respone
 
-        sqlquery = "INSERT INTO dima_table(name) VALUES (%s)"
-        binddata = fullname
-        cursor.execute(sqlquery, binddata)
-        conn.commit()
-        respone = jsonify("joinedqueue")
-        respone.status_code = 200
-        return respone
     except Exception as e:
         print(e)
     finally:
