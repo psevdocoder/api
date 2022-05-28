@@ -33,7 +33,7 @@ def joinqueue():
         cursor.execute("SELECT name FROM dima_table")
         row = cursor.fetchall()
         for lg in row:
-            if lg['login'] == fullname:
+            if lg['fullname'] == fullname:
                 respone = jsonify("already_in_queuee")
                 respone.status_code = 200
                 return respone
