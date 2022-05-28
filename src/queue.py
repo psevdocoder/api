@@ -46,6 +46,7 @@ def joinqueue():
             respone.status_code = 200
             return respone
 
+
     except Exception as e:
         print(e)
     finally:
